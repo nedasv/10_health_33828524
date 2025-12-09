@@ -14,12 +14,13 @@
       </nav>  
     </header>
 
-    <section class="home-container">
-      <h2>Track Your Workouts</h2>
-      <p>Log your exercises and improve your fitness</p>
-
-      <a href="../login">Login</a>
-      <a href="../register">Register</a>
+    <section class="login-container">
+        <h1>Login</h1>
+        <form method="POST" action="loggedin">
+            <p>Username: <input id="user" type="text" name="username" /></p>
+            <p>Password: <input id="password" type="password" name="password" /></p>
+        <input type="submit" value="Login" />
+      </form>
     </section>
   </body>
 </html>

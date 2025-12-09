@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Fitness Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet"  type="text/css" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Fitness Tracker</h1>
+      <nav>
+        <a href="../login">Login</a>
+        <a href="../register">Register</a>
+      </nav>  
+    </header>
+
+    <section class="register-container">
+        <h1>Register</h1>
+        <form method="POST" action="registered">
+          <p>Username: <input id="user" type="text" name="username" /></p>
+          <p>First name: <input id="first" type="text" name="first" /></p>
+          <p>Last name: <input id="last" type="text" name="last" /></p>
+          <p>Email: <input id="email" type="email" name="email" /></p>
+          <p>Password: <input id="password" type="password" name="password" /></p>
+          <input type="submit" value="Register" />
+        </form>
+    </section>
+  </body>
+</html>
