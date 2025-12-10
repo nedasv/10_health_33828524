@@ -33,6 +33,18 @@ app.use(session({
     }
 }))
 
+// Database connection
+const db = mysql.createPool({
+    host: process.env.HEALTH_HOST,
+    user:  process.env.HEALTH_USER,
+    password:  process.env.HEALTH_PASSWORD,
+    database: process.env.HEALTH_DATABASE,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0,
+});
+global.db = db;
+
 // Create an input sanitizer
 app.use(expressSanitizer());
 
