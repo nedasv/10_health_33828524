@@ -14,7 +14,25 @@
     </header>
 
     <section class="home-container">
-      <h2>User dashboard</h2>
+      <h1>User dashboard</h2>
+
+      <h2>Logs: </h3>
+
+      <form method="POST" action="add-log">
+        <p>Title: <input id="title" type="text" name="title" /></p>
+      <input type="submit" value="Add" />
+
+      <h2>Your logs: </h3>
+      
+      <% logs.forEach(log => { %>
+        <div>
+          <h3>Workout: <%= log.workout_name %> Time: <%= log.start_time%></li>
+          <form method="POST" action="post-to-feed">
+            <input type="submit" name=<%= log.id %> value="Post">
+          </form>
+        </div>
+      <% }) %>    
+
     </section>
   </body>
 </html>

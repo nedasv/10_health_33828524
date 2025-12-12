@@ -50,6 +50,39 @@ router.get('/login', function(req, res, next){
     res.render('login.ejs')
 });
 
+router.post('/loggedin', [check('username').notEmpty(), check('password').notEmpty()], function (req, res, next) {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        res.render('login.ejs')
+    }
+    else {
+        let sqlquery = "SELECT password_hash, id FROM users WHERE username='" + req.sanitize(req.body.username) + "'"; // query database to get all the books
+        // execute sql query
+        db.query(sqlquery, (err, result) => {
+            if (err) {
+                next(err)
+            }
+            // Compare the password supplied with the password in the database
+            if (result[0] !== undefined) {
+                bcrypt.compare(req.body.password, result[0].password_hash, function(err, bcrypt_result) {
+                if (err) {
+                    res.send(err.message)
+                }
+                else if (bcrypt_result == true) {
+                    // Save user session here, when login is successful
+                    req.session.user_id = req.sanitize(result[0].id);
+                    console.log(req.session.user_id)
+                    res.redirect('../user/dashboard') 
+                }
+                else {
+                    // Show inncorect password msg
+                }
+                })
+            }
+        });
+    }
+})
+
 router.get('/about', function(req, res, next){
     res.render('about.ejs')
 });
