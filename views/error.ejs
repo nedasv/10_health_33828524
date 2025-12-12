@@ -1,0 +1,18 @@
+<%- include('header.ejs') %>
+    <div>
+        <div>
+            <% if (error.status === 404) { %>
+                🔍
+            <% } else { %>
+                ⚠️
+            <% } %>
+        </div>
+        
+        <h1><%= title %></h1>
+        <p><%= message %></p>
+        
+        <div>
+            <a href="/" class="primary-button">Go to Home</a>
+        </div>
+    </div>
+<%- include('footer.ejs') %>

@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS SharedFeed (
     id     INT AUTO_INCREMENT NOT NULL,
     user_log_id INT NOT NULL,
     title VARCHAR(255),
+    likes INT,
     PRIMARY KEY (id),
     FOREIGN KEY (user_log_id) REFERENCES UserLogs(id)
 );
@@ -37,12 +38,11 @@ CREATE TABLE IF NOT EXISTS SharedFeed (
 # Create review table
 CREATE TABLE IF NOT EXISTS Reviews (
     id     INT NOT NULL,
-    feed_id INT NOT NULL, 
     user_id INT NOT NULL,
     rating INT NOT NULL,
     content TEXT,
     PRIMARY KEY (id),
-    FOREIGN KEY (feed_id) REFERENCES SharedFeed(id)
+    FOREIGN KEY (user_id) REFERENCES Users(id)
 );
 
 CREATE USER IF NOT EXISTS 'health_app'@'localhost' IDENTIFIED BY 'qwertyuiop'; 

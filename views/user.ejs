@@ -26,12 +26,38 @@
       
       <% logs.forEach(log => { %>
         <div>
-          <h3>Workout: <%= log.workout_name %> Time: <%= log.start_time%></li>
-          <form method="POST" action="post-to-feed">
-            <input type="submit" name=<%= log.id %> value="Post">
-          </form>
+          <button class="log-button" data-log-id="<%= log.id %>">button<%= log.id %></button>
         </div>
-      <% }) %>    
+      <% }) %>
+
+      <script>
+        document.querySelectorAll('.log-button').forEach(button => {
+          button.addEventListener('click', async () => {
+            const logId = button.dataset.logId;
+            
+            try {
+              const response = await fetch('./api/post', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  logId: logId,
+                  message: 'Hello from the client!',
+                  timestamp: new Date().toISOString()
+                })
+              });
+
+              const data = await response.json();
+              console.log('Success:', data);
+              alert('Request sent successfully!');
+            } catch (error) {
+              console.error('Error:', error);
+              alert('Request failed!');
+            }
+          });
+        });
+      </script>
 
     </section>
   </body>
