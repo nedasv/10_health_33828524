@@ -17,12 +17,52 @@
     <section class="register-container">
         <h1>Register</h1>
         <form method="POST" action="registered">
-          <p>Username: <input id="user" type="text" name="username" /></p>
-          <p>First name: <input id="first" type="text" name="first" /></p>
-          <p>Last name: <input id="last" type="text" name="last" /></p>
-          <p>Email: <input id="email" type="email" name="email" /></p>
-          <p>Password: <input id="password" type="password" name="password" /></p>
-          <input type="submit" value="Register" />
+          
+          <div class="register-form">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username"
+                    placeholder="Choose a username (5-20 characters)" 
+                    value="<%= typeof data !== 'undefined' && data.username ? data.username : '' %>"
+                    required minlength="5" maxlength="20">
+          </div>
+          
+          <div class="register-form">
+            <label for="first">First Name</label>
+            <input type="text" id="first" name="first"
+                  placeholder="Your first name"
+                  value="<%= typeof data !== 'undefined' && data.first ? data.first : '' %>"
+                  required>
+          </div>
+          
+          <div class="register-form">
+            <label for="last">Last Name</label>
+            <input type="text" id="last" name="last" 
+                    placeholder="Your last name"
+                    value="<%= typeof data !== 'undefined' && data.last ? data.last : '' %>"
+                    required>
+          </div>
+
+          <div class="register-form">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email"
+                    placeholder="your@email.com"
+                    value="<%= typeof data !== 'undefined' && data.email ? data.email : '' %>"
+                    required>
+          </div>
+          
+          
+          <div class="register-form">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password"
+                  placeholder="At least 8 characters" required minlength="8">
+            <small style="color: var(--text-light);">
+                Password must be at least 8 characters with uppercase, lowercase, number, and special character.
+            </small>
+          </div>
+
+          <div class="register-form">
+            <button type="submit">Create Account</button>
+          </div>
         </form>
     </section>
   </body>
