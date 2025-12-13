@@ -43,7 +43,7 @@ router.post('/registered',
 
         if (!errors.isEmpty()) {
             // Renders the page but with error msg
-            return res.render('register.ejs', {errors: errors.array()})
+            return res.render('register.ejs', {errors: errors.array(), data: req.body})
         } 
         // saving data in database
         const plainPassword = req.body.password
@@ -61,7 +61,7 @@ router.post('/registered',
                     // If database returns error of there already being a duplicate entry
                     if (err.code == 'ER_DUP_ENTRY') {
                         // Renders the page but with error msg
-                        return res.render('register.ejs', {errors: [{ msg: 'Username or email already exists' }]})
+                        return res.render('register.ejs', {errors: [{ msg: 'Username or email already exists' }], data: req.body})
                     }
                     return next(err)
                 }
@@ -75,42 +75,70 @@ router.get('/login', function(req, res, next){
     res.render('login.ejs')
 });
 
-router.post('/loggedin', [check('username').notEmpty(), check('password').notEmpty()], function (req, res, next) {
-    const errors = validationResult(req)
-    if (!errors.isEmpty()) {
-        res.render('login.ejs')
-    }
-    else {
-        let sqlquery = "SELECT password_hash, id FROM users WHERE username='" + req.sanitize(req.body.username) + "'"; // query database to get all the books
-        // execute sql query
-        db.query(sqlquery, (err, result) => {
-            if (err) {
-                next(err)
-            }
-            // Compare the password supplied with the password in the database
-            if (result[0] !== undefined) {
-                bcrypt.compare(req.body.password, result[0].password_hash, function(err, bcrypt_result) {
+router.post('/loggedin', 
+    [
+        check('username').notEmpty().withMessage('Username is required'), 
+        check('password').notEmpty().withMessage('Password is required')
+    ], 
+    function (req, res, next) {
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            res.render('login.ejs', {error: "Fill in all fields"})
+        }
+        else {
+            let sqlquery = "SELECT * FROM users WHERE username=?"
+            // execute sql query
+            db.query(sqlquery, [req.sanitize(req.body.username)], (err, result) => {
                 if (err) {
-                    res.send(err.message)
+                    next(err)
                 }
-                else if (bcrypt_result == true) {
-                    // Save user session here, when login is successful
-                    req.session.user_id = req.sanitize(result[0].id);
-                    console.log(req.session.user_id)
-                    res.redirect('../user/dashboard') 
-                }
-                else {
-                    // Show inncorect password msg
-                }
-                })
-            }
-        });
-    }
-})
 
-router.get('/about', function(req, res, next){
-    res.render('about.ejs')
+                if (result.length === 0) {
+                    return res.render('login.ejs', {error: 'Invalid username or password'});
+                }
+
+                // Compare the password supplied with the password in the database
+                if (result[0] !== undefined) {
+                    bcrypt.compare(req.body.password, result[0].password_hash, function(err, bcrypt_result) {
+                        if (err) {
+                            return next(err);
+                        } else if (bcrypt_result === true) {
+                            // Save user session here, when login is successful
+
+                            req.session.user = {
+                                id: result[0].id,
+                                username: result[0].username,
+                                first_name: result[0].first_name,
+                                last_name: result[0].last_name,
+                                email: result[0].email,
+                            }
+
+                            console.log(req.session.user_id)
+                            res.redirect('./user/dashboard') 
+                        } else {
+                            // Show inncorect password msg
+                            res.render('login.ejs', {error: 'Invalid username or password'});
+                        }
+                        }
+                    )
+                }
+            });
+        }
+    }
+)
+
+router.get('/search', function(req, res, next){
+    // search page
 });
+
+router.get('/feed', function(req, res, next){
+    // feed page
+});
+
+router.get('/feed/:id/review', function(req, res, next){
+    // add review to feed
+});
+
 
 // Export the router object so index.js can access it
 module.exports = router
