@@ -48,6 +48,15 @@ const db = mysql.createPool({
 });
 global.db = db;
 
+db.getConnection((err, connection) => {
+    if (err) {
+        console.error('Database connection failed:', err.message);
+    } else {
+        console.log('Database connected successfully');
+        connection.release();
+    }
+});
+
 // Create an input sanitizer
 app.use(expressSanitizer());
 
