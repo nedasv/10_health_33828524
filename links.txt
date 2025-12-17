@@ -1,0 +1,9 @@
+home=https://www.doc.gold.ac.uk/usr/422/
+about=https://www.doc.gold.ac.uk/usr/422/about
+search=home=https://www.doc.gold.ac.uk/usr/422/search
+dashboard=https://www.doc.gold.ac.uk/usr/422/user/dashboard
+login=https://www.doc.gold.ac.uk/usr/422/login
+register=https://www.doc.gold.ac.uk/usr/422/register
+add_workout=https://www.doc.gold.ac.uk/usr/422/user/workouts/new
+edit_workout=https://www.doc.gold.ac.uk/usr/422/user/workouts/:id/edit
+feed=https://www.doc.gold.ac.uk/usr/422/feed
