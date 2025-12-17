@@ -7,3 +7,5 @@ register=https://www.doc.gold.ac.uk/usr/422/register
 add_workout=https://www.doc.gold.ac.uk/usr/422/user/workouts/new
 edit_workout=https://www.doc.gold.ac.uk/usr/422/user/workouts/:id/edit
 feed=https://www.doc.gold.ac.uk/usr/422/feed
+stat_api=https://www.doc.gold.ac.uk/usr/422/api/stats
+exercise_api=https://www.doc.gold.ac.uk/usr/422/api/exercises
