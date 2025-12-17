@@ -142,7 +142,7 @@ router.post('/workouts/new',
                     // Get calories per minute for each exercise
                     db.query("SELECT id, calories_per_minute FROM Exercises WHERE id IN (?)", [validExercises], (err, exerciseData) => {
                         if (err) {
-                            return res.redirect('/user/dashboard?message=Workout created');
+                            return res.redirect('./user/dashboard?message=Workout created');
                         }
                         
                         const caloriesMap = {};
@@ -185,18 +185,18 @@ router.post('/workouts/new',
                                 
                                 // Update total calories
                                 db.query("UPDATE Workouts SET total_calories = ? WHERE id = ?", [totalCalories, workoutId], (err) => {
-                                    res.redirect('/user/dashboard?message=Workout logged successfully');
+                                    res.redirect('./user/dashboard?message=Workout logged successfully');
                                 });
                             });
                         } else {
-                            res.redirect('/user/dashboard?message=Workout logged successfully');
+                            res.redirect('./user/dashboard?message=Workout logged successfully');
                         }
                     });
                 } else {
-                    res.redirect('/user/dashboard?message=Workout logged successfully');
+                    res.redirect('./user/dashboard?message=Workout logged successfully');
                 }
             } else {
-                res.redirect('/user/dashboard?message=Workout logged successfully');
+                res.redirect('./user/dashboard?message=Workout logged successfully');
             }
         });
     }
@@ -215,7 +215,7 @@ router.get('/workouts/:id', function(req, res, next) {
         }
         
         if (workoutResult.length === 0) {
-            return res.redirect('/user/workouts');
+            return res.redirect('./user/workouts');
         }
         
         let exercisesQuery = `
@@ -253,7 +253,7 @@ router.get('/workouts/:id/edit', function(req, res, next) {
         }
         
         if (result.length === 0) {
-            return res.redirect('/user/workouts');
+            return res.redirect('./user/workouts');
         }
         
         res.render('workout-edit.ejs', {
@@ -278,7 +278,7 @@ router.post('/workouts/:id/edit',
         if (!errors.isEmpty()) {
             return db.query("SELECT * FROM Workouts WHERE id = ? AND user_id = ?", [workoutId, userId], (err, result) => {
                 if (err || result.length === 0) {
-                    return res.redirect('/user/workouts');
+                    return res.redirect('./user/workouts');
                 }
                 res.render('workout-edit.ejs', {
                     user: req.session.user,
@@ -299,7 +299,7 @@ router.post('/workouts/:id/edit',
             if (err) {
                 return next(err);
             }
-            res.redirect('/user/workouts/' + workoutId + '?message=Workout updated successfully');
+            res.redirect('./user/workouts/' + workoutId + '?message=Workout updated successfully');
         });
     }
 );
@@ -315,7 +315,7 @@ router.post('/workouts/:id/delete', function(req, res, next) {
         if (err) {
             return next(err);
         }
-        res.redirect('/user/workouts?message=Workout deleted successfully');
+        res.redirect('./user/workouts?message=Workout deleted successfully');
     });
 });
 
@@ -331,7 +331,7 @@ router.post('/workouts/:id/share', function(req, res, next) {
         }
         
         if (result.length === 0) {
-            return res.redirect('/user/workouts');
+            return res.redirect('./user/workouts');
         }
         
         const workout = result[0];
@@ -351,7 +351,7 @@ router.post('/workouts/:id/share', function(req, res, next) {
                 if (err) {
                     console.error('Error updating workout:', err);
                 }
-                res.redirect('/feed?message=Workout shared to community!');
+                res.redirect('./feed?message=Workout shared to community!');
             });
         });
     });
