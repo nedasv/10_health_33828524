@@ -53,7 +53,7 @@ router.post('/registered',
             }
 
             // Store hashed password in your database.
-            let sqlquery = "INSERT INTO users (username, first_name, last_name, email, password_hash) VALUES (?,?,?,?,?)"
+            let sqlquery = "INSERT INTO Users (username, first_name, last_name, email, password_hash) VALUES (?,?,?,?,?)"
             // execute sql query
             let newrecord = [req.sanitize(req.body.username), req.sanitize(req.body.first), req.sanitize(req.body.last), req.body.email, hashedPassword]
             db.query(sqlquery, newrecord, (err, result) => {
@@ -86,7 +86,7 @@ router.post('/loggedin',
             res.render('login.ejs', {error: "Fill in all fields"})
         }
         else {
-            let sqlquery = "SELECT * FROM users WHERE username=?"
+            let sqlquery = "SELECT * FROM Users WHERE username=?"
             // execute sql query
             db.query(sqlquery, [req.sanitize(req.body.username)], (err, result) => {
                 if (err) {
