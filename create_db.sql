@@ -41,8 +41,8 @@ CREATE TABLE IF NOT EXISTS Workouts (
     total_calories INT DEFAULT 0,
     is_shared BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (id),
-    FOREIGN KEY (user_id) REFERENCES Users(id)
+    PRIMARY KEY (id), 
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS WorkoutExercises (
@@ -55,8 +55,8 @@ CREATE TABLE IF NOT EXISTS WorkoutExercises (
     duration_minutes INT,
     calories_burned INT,
     PRIMARY KEY (id),
-    FOREIGN KEY (workout_id) REFERENCES Workouts(id),
-    FOREIGN KEY (exercise_id) REFERENCES Exercises(id)
+    FOREIGN KEY (workout_id) REFERENCES Workouts(id) ON DELETE CASCADE,
+    FOREIGN KEY (exercise_id) REFERENCES Exercises(id) ON DELETE CASCADE
 );
 
 -- Create shared_feed table
@@ -69,21 +69,21 @@ CREATE TABLE IF NOT EXISTS SharedFeed (
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
-    FOREIGN KEY (workout_id) REFERENCES Workouts(id),
-    FOREIGN KEY (user_id) REFERENCES Users(id)
+    FOREIGN KEY (workout_id) REFERENCES Workouts(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
 );
 
 -- Create review table
 CREATE TABLE IF NOT EXISTS Reviews (
-    id     INT NOT NULL,
+    id     INT AUTO_INCREMENT NOT NULL,
     feed_id INT NOT NULL,
     user_id INT NOT NULL,
     rating INT CHECK (rating >= 1 AND rating <= 5),
     content TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
-    FOREIGN KEY (feed_id) REFERENCES SharedFeed(id),
-    FOREIGN KEY (user_id) REFERENCES Users(id)
+    FOREIGN KEY (feed_id) REFERENCES SharedFeed(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
 );
 
 CREATE USER IF NOT EXISTS 'health_app'@'localhost' IDENTIFIED BY 'qwertyuiop'; 

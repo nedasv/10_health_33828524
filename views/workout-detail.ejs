@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Fitness Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet"  type="text/css" href="style.css" />
+  </head>
+  <body>
+    <div class="dashboard-header">
+    <h1><%= workout.name %></h1>
+    <div>
+        <a href="/user/workouts/<%= workout.id %>/edit" class="btn btn-secondary">Edit</a>
+        <% if (!workout.is_shared) { %>
+            <form action="/user/workouts/<%= workout.id %>/share" method="POST" style="display: inline;">
+                <button type="submit" class="btn btn-primary">Share to Community</button>
+            </form>
+        <% } else { %>
+            <span class="badge badge-cardio" style="padding: 10px 20px; font-size: 1rem;">Shared</span>
+        <% } %>
+    </div>
+    </div>
+
+    <% if (typeof message !== 'undefined' && message) { %>
+        <div class="alert alert-success">
+            <%= message %>
+        </div>
+    <% } %>
+
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Workout Details</h2>
+        </div>
+        
+        <div class="workout-stats" style="margin-bottom: 20px;">
+            <div class="stat">
+                <span class="stat-label">Date</span>
+                <span class="stat-value"><%= new Date(workout.workout_date).toLocaleDateString() %></span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Duration</span>
+                <span class="stat-value"><%= workout.duration_minutes || '-' %> min</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Total Calories</span>
+                <span class="stat-value"><%= workout.total_calories || 0 %></span>
+            </div>
+        </div>
+        
+        <% if (workout.notes) { %>
+            <div style="background: var(--bg-light); padding: 15px; border-radius: var(--border-radius); margin-bottom: 20px;">
+                <strong>Notes:</strong>
+                <p style="margin-top: 5px;"><%= workout.notes %></p>
+            </div>
+        <% } %>
+    </div>
+
+    <div>
+        <div>
+            <h2 class="card-title">Exercises</h2>
+        </div>
+        
+        <% if (exercises && exercises.length > 0) { %>
+            <% exercises.forEach(function(ex) { %>
+                <div class="exercise-item">
+                    <div class="exercise-info">
+                        <h4><%= ex.name %></h4>
+                        <p><%= ex.description || '' %></p>
+                    </div>
+                    <div>
+                        <span><%= ex.category %></span>
+                        <div style="margin-top: 10px;">
+                            <% if (ex.sets) { %><strong><%= ex.sets %></strong> sets<% } %>
+                            <% if (ex.reps) { %> × <strong><%= ex.reps %></strong> reps<% } %>
+                            <% if (ex.weight_kg) { %> @ <strong><%= ex.weight_kg %></strong>kg<% } %>
+                            <% if (ex.duration_minutes) { %><strong><%= ex.duration_minutes %></strong> min<% } %>
+                        </div>
+                        <% if (ex.calories_burned) { %>
+                            <div style="color: var(--primary-color); font-weight: bold; margin-top: 5px;">
+                                🔥 <%= ex.calories_burned %> cal
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            <% }); %>
+        <% } else { %>
+            <div>
+                <p>No exercises recorded for this workout.</p>
+                <a href="/user/workouts/<%= workout.id %>/edit" style="margin-top: 10px;">Add Exercises</a>
+            </div>
+        <% } %>
+    </div>
+
+    <div>
+        <a href="/user/workouts">← Back to Workouts</a>
+    </div>
+
+  </body>
+</html>
+
+

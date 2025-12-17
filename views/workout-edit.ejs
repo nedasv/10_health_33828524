@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Fitness Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet"  type="text/css" href="style.css" />
+  </head>
+  <body>
+    <div class="page-header">
+    <h1>Edit Workout</h1>
+    <p>Update your workout details</p>
+    </div>
+
+    <div style="max-width: 700px;">
+        <div class="card">
+            <% if (typeof errors !== 'undefined' && errors && errors.length > 0) { %>
+                <div>
+                    <strong>Please fix the following errors:</strong>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <% errors.forEach(function(err) { %>
+                            <li><%= err.msg %></li>
+                        <% }); %>
+                    </ul>
+                </div>
+            <% } %>
+
+            <form method="POST" action="/user/workouts/<%= workout.id %>/edit">
+                <div>
+                    <label for="name">Workout Name *</label>
+                    <input type="text" id="name" name="name"
+                        value="<%= workout.name %>"
+                        required maxlength="255">
+                </div>
+
+                <div>
+                    <div>
+                        <label for="workout_date">Date *</label>
+                        <input type="date" id="workout_date" name="workout_date"
+                            value="<%= new Date(workout.workout_date).toISOString().split('T')[0] %>"
+                            required>
+                    </div>
+
+                    <div>
+                        <label for="duration_minutes">Duration (minutes)</label>
+                        <input type="number" id="duration_minutes" name="duration_minutes" 
+                            value="<%= workout.duration_minutes || '' %>"
+                            min="1" max="480">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="notes">Notes</label>
+                    <textarea id="notes" name="notes"><%= workout.notes || '' %></textarea>
+                </div>
+
+                <div>
+                    <div>
+                        <button type="submit" style="width: 100%;">Save Changes</button>
+                    </div>
+                    <div>
+                        <a href="/user/workouts/<%= workout.id %>" style="width: 100%; display: block; text-align: center;">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+  </body>
+</html>
+
+
+

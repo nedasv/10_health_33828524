@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Fitness Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet"  type="text/css" href="style.css" />
+  </head>
+  <body>
+    <div class="page-header">
+    <h1>Log New Workout</h1>
+    <p>Record your exercise session</p>
+    </div>
+
+    <div style="max-width: 700px;">
+        <div>
+            <% if (typeof errors !== 'undefined' && errors && errors.length > 0) { %>
+                <div>
+                    <strong>Please fix the following errors:</strong>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <% errors.forEach(function(err) { %>
+                            <li><%= err.msg %></li>
+                        <% }); %>
+                    </ul>
+                </div>
+            <% } %>
+
+            <form method="POST" action="/user/workouts/new">
+                <div>
+                    <label for="name">Workout Name *</label>
+                    <input type="text" id="name" name="name"
+                        placeholder="e.g., Morning Strength Training"
+                        value="<%= typeof formData !== 'undefined' && formData.name ? formData.name : '' %>"
+                        required maxlength="255">
+                </div>
+
+                <div>
+                    <div>
+                        <label for="workout_date">Date *</label>
+                        <input type="date" id="workout_date" name="workout_date" 
+                            value="<%= typeof formData !== 'undefined' && formData.workout_date ? formData.workout_date : new Date().toISOString().split('T')[0] %>"
+                            required>
+                    </div>
+
+                    <div>
+                        <label for="duration_minutes">Duration (minutes)</label>
+                        <input type="number" id="duration_minutes" name="duration_minutes"
+                            placeholder="e.g., 45"
+                            value="<%= typeof formData !== 'undefined' && formData.duration_minutes ? formData.duration_minutes : '' %>"
+                            min="1" max="480">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="notes">Notes</label>
+                    <textarea id="notes" name="notes"
+                            placeholder="Add any notes about your workout..."><%= typeof formData !== 'undefined' && formData.notes ? formData.notes : '' %></textarea>
+                </div>
+
+                <h3>
+                    Add Exercises
+                </h3>
+
+                <div id="exercises-container">
+                    <div style="margin-bottom: 15px; padding: 15px;">
+                        <div>
+                            <label>Exercise</label>
+                            <select name="exercise_id[]" required>
+                                <option value="">Select an exercise</option>
+                                <% exercises.forEach(function(ex) { %>
+                                    <option value="<%= ex.id %>" data-calories="<%= ex.calories_per_minute %>">
+                                        <%= ex.name %> (<%= ex.category %>)
+                                    </option>
+                                <% }); %>
+                            </select>
+                        </div>
+                        <div>
+                            <div>
+                                <label>Sets</label>
+                                <input type="number" name="sets[]" placeholder="3" min="1" max="20">
+                            </div>
+                            <div>
+                                <label>Reps</label>
+                                <input type="number" name="reps[]" placeholder="10" min="1" max="1000">
+                            </div>
+                        </div>
+                        <div>
+                            <div>
+                                <label>Weight (kg)</label>
+                                <input type="number" name="weight_kg[]" placeholder="50" step="0.5" min="0" max="1000">
+                            </div>
+                            <div>
+                                <label>Duration (min)</label>
+                                <input type="number" name="exercise_duration[]" placeholder="10" min="1" max="240">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" onclick="addExercise()">
+                    + Add Another Exercise
+                </button>
+
+                <div>
+                    <button type="submit" style="width: 100%;">Save Workout</button>
+                </div>
+            </form>
+
+            <div>
+                <a href="/user/dashboard">← Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function addExercise() {
+        const container = document.getElementById('exercises-container');
+        const template = container.querySelector('.exercise-entry').cloneNode(true);
+        
+        // Clear input values
+        template.querySelectorAll('input').forEach(input => input.value = '');
+        template.querySelector('select').selectedIndex = 0;
+        
+        // Add remove button
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.textContent = 'Remove';
+        removeBtn.onclick = function() { this.parentElement.remove(); };
+        removeBtn.style.marginTop = '10px';
+        template.appendChild(removeBtn);
+        
+        container.appendChild(template);
+    }
+    </script>
+  </body>
+</html>
+
+
+

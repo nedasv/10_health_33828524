@@ -6,15 +6,141 @@
     <link rel="stylesheet"  type="text/css" href="style.css" />
   </head>
   <body>
-    <header>
-      <h1>Fitness Tracker</h1>
-      <nav>
-        <a href="../login">Logout</a>
-      </nav>  
-    </header>
+    <div class="page-header">
+      <h1>Community Feed</h1>
+      <p>See what others are achieving and get inspired!</p>
+    </div>
 
-    <section class="home-container">
-      <h2>User feed</h2>
-    </section>
+    <% if (typeof message !== 'undefined' && message) { %>
+        <div class="alert alert-success">
+            <%= message %>
+        </div>
+    <% } %>
+
+    <% if (typeof feedItems !== 'undefined' && feedItems && feedItems.length > 0) { %>
+        <% feedItems.forEach(function(item) { %>
+            <div class="feed-item">
+                <div class="feed-header">
+                    <div class="feed-avatar"><%= item.first_name ? item.first_name.charAt(0) : 'U' %></div>
+                    <div class="feed-user-info">
+                        <h4><%= item.first_name %> <%= item.last_name %></h4>
+                        <span class="feed-date">
+                            <%= new Date(item.created_at).toLocaleDateString() %> at 
+                            <%= new Date(item.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) %>
+                        </span>
+                    </div>
+                </div>
+                <div class="feed-content">
+                    <h3><%= item.title || item.workout_name %></h3>
+                    <% if (item.description) { %>
+                        <p><%= item.description %></p>
+                    <% } %>
+                    
+                    <div class="workout-stats" style="margin-top: 15px;">
+                        <div class="stat">
+                            <span class="stat-label">Workout</span>
+                            <span class="stat-value" style="font-size: 1rem;"><%= item.workout_name %></span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Date</span>
+                            <span class="stat-value" style="font-size: 1rem;"><%= new Date(item.workout_date).toLocaleDateString() %></span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Duration</span>
+                            <span class="stat-value"><%= item.duration_minutes || '-' %> min</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Calories</span>
+                            <span class="stat-value"><%= item.total_calories || 0 %> 🔥</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="feed-footer">
+                    <div class="feed-stats">
+                        <span class="rating">
+                            <% 
+                            var avgRating = item.avg_rating || 0;
+                            for(var i = 1; i <= 5; i++) { %>
+                                <%= i <= avgRating ? '★' : '☆' %>
+                            <% } %>
+                            (<%= item.review_count || 0 %>)
+                        </span>
+                    </div>
+                    <% if (typeof user !== 'undefined' && user) { %>
+                        <button type="button" class="btn btn-secondary btn-small" 
+                                onclick="toggleReviewForm(<%= item.id %>)">
+                            Leave Review
+                        </button>
+                    <% } %>
+                </div>
+                
+                <!-- Review Form (hidden by default) -->
+                <div id="review-form-<%= item.id %>" class="hidden" style="padding: 20px; background: var(--bg-light);">
+                    <form action="/feed/<%= item.id %>/review" method="POST">
+                        <div class="form-group">
+                            <label>Rating</label>
+                            <select name="rating" class="form-control" required>
+                                <option value="">Select rating</option>
+                                <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                                <option value="4">⭐⭐⭐⭐ Great</option>
+                                <option value="3">⭐⭐⭐ Good</option>
+                                <option value="2">⭐⭐ Fair</option>
+                                <option value="1">⭐ Poor</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Comment</label>
+                            <textarea name="content" class="form-control" placeholder="Share your thoughts..." rows="2"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-small">Submit Review</button>
+                    </form>
+                </div>
+                
+                <!-- Reviews Section -->
+                <% if (typeof item.reviews !== 'undefined' && item.reviews && item.reviews.length > 0) { %>
+                    <div style="padding: 15px 20px; background: var(--bg-light);">
+                        <h4 style="margin-bottom: 15px;">Reviews</h4>
+                        <% item.reviews.forEach(function(review) { %>
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <span class="review-user"><%= review.reviewer_name %></span>
+                                    <span class="review-rating">
+                                        <% for(var i = 1; i <= 5; i++) { %>
+                                            <%= i <= review.rating ? '★' : '☆' %>
+                                        <% } %>
+                                    </span>
+                                </div>
+                                <p><%= review.content %></p>
+                            </div>
+                        <% }); %>
+                    </div>
+                <% } %>
+            </div>
+        <% }); %>
+    <% } else { %>
+        <div class="card">
+            <div class="no-data">
+                <div class="no-data-icon">👥</div>
+                <h3>No posts yet</h3>
+                <p>Be the first to share your workout with the community!</p>
+                <% if (typeof user !== 'undefined' && user) { %>
+                    <a href="/user/dashboard" class="btn btn-primary" style="margin-top: 15px;">Go to Dashboard</a>
+                <% } else { %>
+                    <a href="/login" class="btn btn-primary" style="margin-top: 15px;">Login to Share</a>
+                <% } %>
+            </div>
+        </div>
+    <% } %>
+
+    <script>
+      function toggleReviewForm(id) {
+          const form = document.getElementById('review-form-' + id);
+          form.classList.toggle('hidden');
+      }
+    </script>
+    
   </body>
 </html>
+
+
+

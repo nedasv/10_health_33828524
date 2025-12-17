@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Fitness Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet"  type="text/css" href="style.css" />
+  </head>
+  <body>
+    <div class="page-header">
+    <h1>Search Workouts & Exercises</h1>
+    <p>Find workouts shared by the community or browse exercises</p>
+</div>
+
+<div class="search-container">
+    <form action="/search" method="GET" class="search-box">
+        <input type="text" name="q" class="form-control" 
+               placeholder="Search workouts, exercises, or users..."
+               value="<%= typeof query !== 'undefined' ? query : '' %>">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+    
+    <div class="search-filters">
+        <a href="/search?type=workouts<%= typeof query !== 'undefined' && query ? '&q=' + query : '' %>" 
+           class="filter-btn <%= typeof searchType !== 'undefined' && searchType === 'workouts' ? 'active' : '' %>">
+            🏋️ Workouts
+        </a>
+        <a href="/search?type=exercises<%= typeof query !== 'undefined' && query ? '&q=' + query : '' %>" 
+           class="filter-btn <%= typeof searchType !== 'undefined' && searchType === 'exercises' ? 'active' : '' %>">
+            💪 Exercises
+        </a>
+        <a href="/search?type=users<%= typeof query !== 'undefined' && query ? '&q=' + query : '' %>" 
+           class="filter-btn <%= typeof searchType !== 'undefined' && searchType === 'users' ? 'active' : '' %>">
+            👥 Users
+        </a>
+    </div>
+    </div>
+
+    <% if (typeof results !== 'undefined' && results) { %>
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">
+                    Search Results 
+                    <% if (typeof totalResults !== 'undefined') { %>
+                        (<%= totalResults %> found)
+                    <% } %>
+                </h2>
+            </div>
+            
+            <% if (results.length > 0) { %>
+                <% if (searchType === 'exercises') { %>
+                    <!-- Exercise Results -->
+                    <% results.forEach(function(ex) { %>
+                        <div class="exercise-item">
+                            <div class="exercise-info">
+                                <h4><%= ex.name %></h4>
+                                <p><%= ex.description || 'No description available' %></p>
+                            </div>
+                            <div class="exercise-details">
+                                <span class="badge badge-<%= ex.category.toLowerCase().replace(/\s+/g, '') %>"><%= ex.category %></span>
+                                <div style="margin-top: 5px; color: var(--text-light);">
+                                    ~<%= ex.calories_per_minute %> cal/min
+                                </div>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else if (searchType === 'users') { %>
+                    <!-- User Results -->
+                    <div class="card-grid">
+                        <% results.forEach(function(u) { %>
+                            <div class="card">
+                                <div class="flex" style="align-items: center; gap: 15px;">
+                                    <div class="feed-avatar"><%= u.first_name.charAt(0) %></div>
+                                    <div>
+                                        <h3 style="margin: 0;"><%= u.first_name %> <%= u.last_name %></h3>
+                                        <p style="color: var(--text-light); margin: 5px 0;">@<%= u.username %></p>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }); %>
+                    </div>
+                <% } else { %>
+                    <!-- Workout Results -->
+                    <div class="card-grid">
+                        <% results.forEach(function(workout) { %>
+                            <div class="workout-card">
+                                <div class="workout-header">
+                                    <h3><%= workout.name %></h3>
+                                </div>
+                                <div class="workout-body">
+                                    <div class="flex" style="align-items: center; gap: 10px; margin-bottom: 15px;">
+                                        <div class="feed-avatar" style="width: 35px; height: 35px; font-size: 1rem;">
+                                            <%= workout.first_name ? workout.first_name.charAt(0) : 'U' %>
+                                        </div>
+                                        <span><%= workout.first_name %> <%= workout.last_name %></span>
+                                    </div>
+                                    <div class="workout-stats">
+                                        <div class="stat">
+                                            <span class="stat-label">Date</span>
+                                            <span class="stat-value"><%= new Date(workout.workout_date).toLocaleDateString() %></span>
+                                        </div>
+                                        <div class="stat">
+                                            <span class="stat-label">Duration</span>
+                                            <span class="stat-value"><%= workout.duration_minutes || '-' %> min</span>
+                                        </div>
+                                        <div class="stat">
+                                            <span class="stat-label">Calories</span>
+                                            <span class="stat-value"><%= workout.total_calories || 0 %></span>
+                                        </div>
+                                    </div>
+                                    <% if (workout.notes) { %>
+                                        <p style="color: var(--text-light); font-size: 0.9rem; margin-top: 10px;">
+                                            <%= workout.notes.substring(0, 100) %><%= workout.notes.length > 100 ? '...' : '' %>
+                                        </p>
+                                    <% } %>
+                                </div>
+                            </div>
+                        <% }); %>
+                    </div>
+                <% } %>
+            <% } else { %>
+                <div class="no-data">
+                    <div class="no-data-icon">🔍</div>
+                    <h3>No results found</h3>
+                    <p>Try a different search term or browse all <%= searchType %></p>
+                </div>
+            <% } %>
+        </div>
+    <% } else { %>
+        <div class="card">
+            <div class="no-data">
+                <div class="no-data-icon">🔍</div>
+                <h3>Start Your Search</h3>
+                <p>Enter a search term above or use the filters to browse</p>
+            </div>
+        </div>
+        
+        <!-- Popular Exercises Section -->
+        <div class="card" style="margin-top: 20px;">
+            <div class="card-header">
+                <h2 class="card-title">Browse Exercises</h2>
+            </div>
+            <div class="search-filters" style="justify-content: flex-start; margin-bottom: 20px;">
+                <a href="/search?type=exercises&category=Strength" class="filter-btn">Strength</a>
+                <a href="/search?type=exercises&category=Cardio" class="filter-btn">Cardio</a>
+                <a href="/search?type=exercises&category=Core" class="filter-btn">Core</a>
+                <a href="/search?type=exercises&category=Flexibility" class="filter-btn">Flexibility</a>
+                <a href="/search?type=exercises&category=Recovery" class="filter-btn">Recovery</a>
+            </div>
+        </div>
+    <% } %>
+  </body>
+</html>
+
+
+

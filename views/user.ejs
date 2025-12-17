@@ -14,51 +14,75 @@
     </header>
 
     <section class="home-container">
-      <h1>User dashboard</h2>
 
-      <h2>Logs: </h3>
-
-      <form method="POST" action="add-log">
-        <p>Title: <input id="title" type="text" name="title" /></p>
-      <input type="submit" value="Add" />
-
-      <h2>Your logs: </h3>
-      
-      <% logs.forEach(log => { %>
-        <div>
-          <button class="log-button" data-log-id="<%= log.id %>">button<%= log.id %></button>
+      <div class="stats">
+        <div class="stat-card">
+          <h2>Total Workouts</h2>
+          <%= stats.totalWorkouts || 0 %>
         </div>
-      <% }) %>
+        <div class="stat-card">
+          <h2>Calories Burned</h2>
+          <%= stats.totalCalories || 0 %>
+        </div>
+        <div class="stat-card">
+          <h2>Minutes Exercised Workouts</h2>
+          <%= stats.totalMinutes || 0 %>
+        </div>
+        <div class="stat-card">
+          <h2>This Week</h2>
+          <%= stats.thisWeek || 0 %>
+        </div>
+      </div>
 
-      <script>
-        document.querySelectorAll('.log-button').forEach(button => {
-          button.addEventListener('click', async () => {
-            const logId = button.dataset.logId;
-            
-            try {
-              const response = await fetch('./api/post', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                  logId: logId,
-                  message: 'Hello from the client!',
-                  timestamp: new Date().toISOString()
-                })
-              });
-
-              const data = await response.json();
-              console.log('Success:', data);
-              alert('Request sent successfully!');
-            } catch (error) {
-              console.error('Error:', error);
-              alert('Request failed!');
-            }
-          });
-        });
-      </script>
-
+      <% if (workouts && workouts.length > 0) { %>
+        <div class="card-grid">
+            <% workouts.forEach(function(workout) { %>
+                <div class="workout-card">
+                    <div class="workout-header">
+                        <h3><%= workout.name %></h3>
+                    </div>
+                    <div class="workout-body">
+                        <div class="workout-stats">
+                            <div class="stat">
+                                <h2>Date</h2>
+                                <%= new Date(workout.workout_date).toLocaleDateString() %>
+                            </div>
+                            <div class="stat">
+                                <h2>Duration</h2>
+                                <%= workout.duration_minutes || '-' %> min
+                            </div>
+                            <div class="stat">
+                                <h2>Calories</h2>
+                                <%= workout.total_calories || 0 %>
+                            </div>
+                        </div>
+                        <% if (workout.notes) { %>
+                            <p style="color: var(--text-light); font-size: 0.9rem;"><%= workout.notes %></p>
+                        <% } %>
+                        <div class="workout-actions">
+                            <a href="/user/workouts/<%= workout.id %>">View Details</a>
+                            <a href="/user/workouts/<%= workout.id %>/edit">Edit</a>
+                            <% if (!workout.is_shared) { %>
+                                <form action="/user/workouts/<%= workout.id %>/share" method="POST" style="display: inline;">
+                                    <button type="submit">Share</button>
+                                </form>
+                            <% } else { %>
+                                <span>Shared</span>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+      <% } else { %>
+          <div>
+              <div>🏋️</div>
+              <h3>No workouts yet</h3>
+              <p>Start logging your workouts to track your progress!</p>
+              <a href="/user/workouts/new" style="margin-top: 15px;">Log Your First Workout</a>
+          </div>
+      <% } %>
+      
     </section>
   </body>
 </html>

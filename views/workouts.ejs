@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Fitness Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet"  type="text/css" href="style.css" />
+  </head>
+  <body>
+    <div class="dashboard-header">
+    <h1>My Workouts</h1>
+    <a href="/user/workouts/new">Log New Workout</a>
+    </div>
+
+    <% if (typeof message !== 'undefined' && message) { %>
+        <div>
+            <%= message %>
+        </div>
+    <% } %>
+
+    <% if (workouts && workouts.length > 0) { %>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Workout Name</th>
+                        <th>Date</th>
+                        <th>Duration (min)</th>
+                        <th>Calories</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% workouts.forEach(function(workout) { %>
+                        <tr>
+                            <td><strong><%= workout.name %></strong></td>
+                            <td><%= new Date(workout.workout_date).toLocaleDateString() %></td>
+                            <td><%= workout.duration_minutes || '-' %></td>
+                            <td><%= workout.total_calories || 0 %></td>
+                            <td>
+                                <% if (workout.is_shared) { %>
+                                    <span>Shared</span>
+                                <% } else { %>
+                                    <span>Private</span>
+                                <% } %>
+                            </td>
+                            <td>
+                                <a href="/user/workouts/<%= workout.id %>">View</a>
+                                <a href="/user/workouts/<%= workout.id %>/edit">Edit</a>
+                                <form action="/user/workouts/<%= workout.id %>/delete" method="POST" style="display: inline;"
+                                    onsubmit="return confirm('Are you sure you want to delete this workout?');">
+                                    <button type="submit">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    <% } else { %>
+        <h3>No workouts logged yet</h3>
+        <p>Start tracking your fitness journey by logging your first workout!</p>
+        <a href="/user/workouts/new" style="margin-top: 15px;">Log Your First Workout</a>
+    <% } %>
+  </body>
+</html>
+
+
+

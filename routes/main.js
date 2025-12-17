@@ -127,18 +127,141 @@ router.post('/loggedin',
     }
 )
 
-router.get('/search', function(req, res, next){
-    // search page
+router.get('/search', function(req, res, next) {
+    const query = req.query.q || '';
+    const searchType = req.query.type || 'workouts';
+    const category = req.query.category || '';
+    
+    if (!query && !category) {
+        return res.render('search.ejs', { 
+            user: req.session.user || null,
+            results: null,
+            query: '',
+            searchType: searchType
+        });
+    }
+    
+    let sqlquery;
+    let params = [];
+    
+    if (searchType === 'exercises') {
+        if (category) {
+            sqlquery = "SELECT * FROM Exercises WHERE category = ? ORDER BY name";
+            params = [category];
+        } else {
+            sqlquery = "SELECT * FROM Exercises WHERE name LIKE ? OR category LIKE ? OR description LIKE ? ORDER BY name";
+            params = [`%${query}%`, `%${query}%`, `%${query}%`];
+        }
+    } else if (searchType === 'users') {
+        sqlquery = "SELECT id, username, first_name, last_name FROM Users WHERE username LIKE ? OR first_name LIKE ? OR last_name LIKE ? ORDER BY username";
+        params = [`%${query}%`, `%${query}%`, `%${query}%`];
+    } else {
+        // Search shared workouts
+        sqlquery = `
+            SELECT w.*, u.first_name, u.last_name, u.username 
+            FROM Workouts w 
+            JOIN Users u ON w.user_id = u.id 
+            WHERE w.is_shared = TRUE 
+            AND (w.name LIKE ? OR w.notes LIKE ? OR u.username LIKE ?)
+            ORDER BY w.workout_date DESC
+        `;
+        params = [`%${query}%`, `%${query}%`, `%${query}%`];
+    }
+    
+    db.query(sqlquery, params, (err, results) => {
+        if (err) {
+            return next(err);
+        }
+        
+        res.render('search.ejs', { 
+            user: req.session.user || null,
+            results: results,
+            totalResults: results.length,
+            query: query,
+            searchType: searchType
+        });
+    });
 });
 
-router.get('/feed', function(req, res, next){
-    // feed page
+router.get('/feed', function(req, res, next) {
+    let sqlquery = `
+        SELECT sf.*, w.name as workout_name, w.workout_date, w.duration_minutes, w.total_calories,
+               u.first_name, u.last_name, u.username,
+               (SELECT AVG(rating) FROM Reviews WHERE feed_id = sf.id) as avg_rating,
+               (SELECT COUNT(*) FROM Reviews WHERE feed_id = sf.id) as review_count
+        FROM SharedFeed sf
+        JOIN Workouts w ON sf.workout_id = w.id
+        JOIN Users u ON sf.user_id = u.id
+        ORDER BY sf.created_at DESC
+        LIMIT 20
+    `;
+    
+    db.query(sqlquery, (err, feedItems) => {
+        if (err) {
+            return next(err);
+        }
+        
+        // Get reviews for each feed item
+        const feedIds = feedItems.map(item => item.id);
+        
+        if (feedIds.length > 0) {
+            let reviewQuery = `
+                SELECT r.*, u.first_name as reviewer_name
+                FROM Reviews r
+                JOIN Users u ON r.user_id = u.id
+                WHERE r.feed_id IN (?)
+                ORDER BY r.created_at DESC
+            `;
+            
+            db.query(reviewQuery, [feedIds], (err, reviews) => {
+                if (err) {
+                    return next(err);
+                }
+                
+                // Attach reviews to feed items
+                feedItems.forEach(item => {
+                    item.reviews = reviews.filter(r => r.feed_id === item.id).slice(0, 3);
+                });
+                
+                res.render('feed.ejs', { 
+                    user: req.session.user || null,
+                    feedItems: feedItems,
+                    message: req.query.message || null
+                });
+            });
+        } else {
+            res.render('feed.ejs', { 
+                user: req.session.user || null,
+                feedItems: [],
+                message: req.query.message || null
+            });
+        }
+    });
 });
 
-router.get('/feed/:id/review', function(req, res, next){
-    // add review to feed
+router.post('/feed/:id/review', function(req, res, next) {
+    if (!req.session.user) {
+        return res.redirect('/login');
+    }
+    
+    const feedId = req.params.id;
+    const userId = req.session.user.id;
+    const rating = parseInt(req.body.rating);
+    const content = req.sanitize(req.body.content) || '';
+    
+    if (!rating || rating < 1 || rating > 5) {
+        return res.redirect('/feed');
+    }
+    
+    let sqlquery = "INSERT INTO Reviews (feed_id, user_id, rating, content) VALUES (?, ?, ?, ?)";
+    
+    db.query(sqlquery, [feedId, userId, rating, content], (err, result) => {
+        if (err) {
+            return next(err);
+        }
+        res.redirect('/feed');
+    });
 });
-
 
 // Export the router object so index.js can access it
 module.exports = router

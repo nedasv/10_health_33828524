@@ -1,0 +1,28 @@
+USE health;
+
+INSERT INTO Exercises (name, category, description, calories_per_minute) VALUES
+('Push-ups', 'Strength', 'Classic bodyweight exercise targeting chest, shoulders, and triceps', 7.0),
+('Pull-ups', 'Strength', 'Upper body exercise targeting back and biceps', 8.0),
+('Squats', 'Strength', 'Lower body exercise targeting quadriceps, hamstrings, and glutes', 6.0),
+('Deadlift', 'Strength', 'Compound exercise for back, legs, and core', 8.5),
+('Bench Press', 'Strength', 'Chest exercise using barbell or dumbbells', 7.5),
+('Shoulder Press', 'Strength', 'Overhead pressing movement for shoulders', 6.5),
+('Bicep Curls', 'Strength', 'Isolation exercise for biceps', 5.0),
+('Tricep Dips', 'Strength', 'Bodyweight exercise for triceps', 6.0),
+('Lunges', 'Strength', 'Single-leg exercise for legs and balance', 6.0),
+('Plank', 'Core', 'Isometric core exercise', 4.0),
+('Crunches', 'Core', 'Abdominal exercise targeting rectus abdominis', 5.0),
+('Russian Twists', 'Core', 'Rotational core exercise for obliques', 5.5),
+('Running', 'Cardio', 'Cardiovascular exercise', 10.0),
+('Cycling', 'Cardio', 'Low-impact cardiovascular exercise', 8.0),
+('Swimming', 'Cardio', 'Full-body cardiovascular exercise', 9.0),
+('Jump Rope', 'Cardio', 'High-intensity cardio exercise', 12.0),
+('Burpees', 'Cardio', 'Full-body cardio and strength exercise', 10.0),
+('Mountain Climbers', 'Cardio', 'Dynamic cardio exercise', 9.0),
+('Yoga', 'Flexibility', 'Mind-body practice for flexibility and relaxation', 3.0),
+('Stretching', 'Flexibility', 'Static stretching for flexibility', 2.5),
+('Foam Rolling', 'Recovery', 'Self-massage for muscle recovery', 2.0),
+('Walking', 'Cardio', 'Low-intensity cardiovascular exercise', 4.0),
+('HIIT', 'Cardio', 'High-Intensity Interval Training', 12.0),
+('Rowing', 'Cardio', 'Full-body cardio on rowing machine', 8.5),
+('Leg Press', 'Strength', 'Machine exercise for legs', 6.0);
