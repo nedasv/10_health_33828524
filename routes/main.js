@@ -93,10 +93,12 @@ router.post('/loggedin',
                     next(err)
                 }
 
-                if (result.length === 0) {
+                if (result != undefined) {
+                    if (result.length === 0) {
                     return res.render('login.ejs', {error: 'Invalid username or password'});
+                    }
                 }
-
+            
                 // Compare the password supplied with the password in the database
                 if (result[0] !== undefined) {
                     bcrypt.compare(req.body.password, result[0].password_hash, function(err, bcrypt_result) {
