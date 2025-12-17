@@ -3,14 +3,18 @@
   <head>
     <title>Fitness Tracker</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet"  type="text/css" href="style.css" />
+    <link rel="stylesheet"  type="text/css" href="/style.css" />
   </head>
   <body>
     <header>
       <h1>Fitness Tracker</h1>
       <nav>
-        <a href="../login">Logout</a>
-      </nav>  
+        <a href="/user/dashboard">Dashboard</a>
+        <a href="/user/workouts">Workouts</a>
+        <a href="/feed">Feed</a>
+        <a href="/search">Search</a>
+        <a href="/logout">Logout</a>
+      </nav>
     </header>
 
     <section class="home-container">
@@ -57,7 +61,7 @@
                             </div>
                         </div>
                         <% if (workout.notes) { %>
-                            <p style="color: var(--text-light); font-size: 0.9rem;"><%= workout.notes %></p>
+                            <p style="color: #7f8c8d; font-size: 0.9rem;"><%= workout.notes %></p>
                         <% } %>
                         <div class="workout-actions">
                             <a href="/user/workouts/<%= workout.id %>">View Details</a>
@@ -82,7 +86,11 @@
               <a href="/user/workouts/new" style="margin-top: 15px;">Log Your First Workout</a>
           </div>
       <% } %>
-      
+
     </section>
+
+    <footer>
+      <p>Fitness Tracker &copy; 2024</p>
+    </footer>
   </body>
 </html>

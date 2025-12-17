@@ -3,9 +3,21 @@
   <head>
     <title>Fitness Tracker</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet"  type="text/css" href="style.css" />
+    <link rel="stylesheet"  type="text/css" href="/style.css" />
   </head>
   <body>
+    <header>
+      <h1>Fitness Tracker</h1>
+      <nav>
+        <a href="/user/dashboard">Dashboard</a>
+        <a href="/user/workouts">Workouts</a>
+        <a href="/feed">Feed</a>
+        <a href="/search">Search</a>
+        <a href="/logout">Logout</a>
+      </nav>
+    </header>
+
+    <section>
     <div class="page-header">
     <h1>Log New Workout</h1>
     <p>Record your exercise session</p>
@@ -131,6 +143,11 @@
         container.appendChild(template);
     }
     </script>
+    </section>
+
+    <footer>
+      <p>Fitness Tracker &copy; 2024</p>
+    </footer>
   </body>
 </html>
 

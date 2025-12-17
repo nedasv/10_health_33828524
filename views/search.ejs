@@ -3,9 +3,26 @@
   <head>
     <title>Fitness Tracker</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet"  type="text/css" href="style.css" />
+    <link rel="stylesheet"  type="text/css" href="/style.css" />
   </head>
   <body>
+    <header>
+      <h1>Fitness Tracker</h1>
+      <nav>
+        <% if (typeof user !== 'undefined' && user) { %>
+          <a href="/user/dashboard">Dashboard</a>
+          <a href="/user/workouts">Workouts</a>
+          <a href="/feed">Feed</a>
+          <a href="/search">Search</a>
+          <a href="/logout">Logout</a>
+        <% } else { %>
+          <a href="/login">Login</a>
+          <a href="/register">Register</a>
+        <% } %>
+      </nav>
+    </header>
+
+    <section>
     <div class="page-header">
     <h1>Search Workouts & Exercises</h1>
     <p>Find workouts shared by the community or browse exercises</p>
@@ -57,7 +74,7 @@
                             </div>
                             <div class="exercise-details">
                                 <span class="badge badge-<%= ex.category.toLowerCase().replace(/\s+/g, '') %>"><%= ex.category %></span>
-                                <div style="margin-top: 5px; color: var(--text-light);">
+                                <div style="margin-top: 5px; color: #7f8c8d;">
                                     ~<%= ex.calories_per_minute %> cal/min
                                 </div>
                             </div>
@@ -72,7 +89,7 @@
                                     <div class="feed-avatar"><%= u.first_name.charAt(0) %></div>
                                     <div>
                                         <h3 style="margin: 0;"><%= u.first_name %> <%= u.last_name %></h3>
-                                        <p style="color: var(--text-light); margin: 5px 0;">@<%= u.username %></p>
+                                        <p style="color: #7f8c8d; margin: 5px 0;">@<%= u.username %></p>
                                     </div>
                                 </div>
                             </div>
@@ -108,7 +125,7 @@
                                         </div>
                                     </div>
                                     <% if (workout.notes) { %>
-                                        <p style="color: var(--text-light); font-size: 0.9rem; margin-top: 10px;">
+                                        <p style="color: #7f8c8d; font-size: 0.9rem; margin-top: 10px;">
                                             <%= workout.notes.substring(0, 100) %><%= workout.notes.length > 100 ? '...' : '' %>
                                         </p>
                                     <% } %>
@@ -148,6 +165,11 @@
             </div>
         </div>
     <% } %>
+    </section>
+
+    <footer>
+      <p>Fitness Tracker &copy; 2024</p>
+    </footer>
   </body>
 </html>
 

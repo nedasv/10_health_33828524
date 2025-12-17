@@ -3,9 +3,21 @@
   <head>
     <title>Fitness Tracker</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet"  type="text/css" href="style.css" />
+    <link rel="stylesheet"  type="text/css" href="/style.css" />
   </head>
   <body>
+    <header>
+      <h1>Fitness Tracker</h1>
+      <nav>
+        <a href="/user/dashboard">Dashboard</a>
+        <a href="/user/workouts">Workouts</a>
+        <a href="/feed">Feed</a>
+        <a href="/search">Search</a>
+        <a href="/logout">Logout</a>
+      </nav>
+    </header>
+
+    <section>
     <div class="dashboard-header">
     <h1>My Workouts</h1>
     <a href="/user/workouts/new">Log New Workout</a>
@@ -62,6 +74,13 @@
         <p>Start tracking your fitness journey by logging your first workout!</p>
         <a href="/user/workouts/new" style="margin-top: 15px;">Log Your First Workout</a>
     <% } %>
+
+    <a href="/user/dashboard" class="back-btn">Back to Dashboard</a>
+    </section>
+
+    <footer>
+      <p>Fitness Tracker &copy; 2024</p>
+    </footer>
   </body>
 </html>
 

@@ -1,18 +1,41 @@
-<%- include('header.ejs') %>
-    <div>
-        <div>
-            <% if (error.status === 404) { %>
-                🔍
-            <% } else { %>
-                ⚠️
-            <% } %>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Fitness Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet"  type="text/css" href="/style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Fitness Tracker</h1>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/login">Login</a>
+        <a href="/register">Register</a>
+      </nav>
+    </header>
+
+    <section class="home-container">
+        <div style="text-align: center;">
+            <div style="font-size: 4rem;">
+                <% if (error.status === 404) { %>
+                    🔍
+                <% } else { %>
+                    ⚠️
+                <% } %>
+            </div>
+
+            <h1><%= title %></h1>
+            <p><%= message %></p>
+
+            <div>
+                <a href="/" class="back-btn">Go to Home</a>
+            </div>
         </div>
-        
-        <h1><%= title %></h1>
-        <p><%= message %></p>
-        
-        <div>
-            <a href="/" class="primary-button">Go to Home</a>
-        </div>
-    </div>
-<%- include('footer.ejs') %>
+    </section>
+
+    <footer>
+      <p>Fitness Tracker &copy; 2024</p>
+    </footer>
+  </body>
+</html>

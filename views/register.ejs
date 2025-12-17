@@ -3,7 +3,7 @@
   <head>
     <title>Fitness Tracker</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet"  type="text/css" href="style.css" />
+    <link rel="stylesheet"  type="text/css" href="/style.css" />
   </head>
   <body>
     <header>
@@ -16,6 +16,15 @@
 
     <section class="register-container">
         <h1>Register</h1>
+
+        <% if (typeof errors !== 'undefined' && errors && errors.length > 0) { %>
+          <div class="alert alert-error">
+            <% errors.forEach(function(err) { %>
+              <div><%= err.msg %></div>
+            <% }); %>
+          </div>
+        <% } %>
+
         <form method="POST" action="registered">
           
           <div class="register-form">
@@ -55,7 +64,7 @@
             <label for="password">Password</label>
             <input type="password" id="password" name="password"
                   placeholder="At least 8 characters" required minlength="8">
-            <small style="color: var(--text-light);">
+            <small style="color: #7f8c8d;">
                 Password must be at least 8 characters with uppercase, lowercase, number, and special character.
             </small>
           </div>
@@ -70,6 +79,11 @@
             <button type="submit">Create Account</button>
           </div>
         </form>
+        <a href="../" class="back-btn">Back to Home</a>
     </section>
+
+    <footer>
+      <p>Fitness Tracker &copy; 2024</p>
+    </footer>
   </body>
 </html>
